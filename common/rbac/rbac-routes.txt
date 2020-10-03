@@ -1,0 +1,34 @@
+composer require mdmsoft/yii2-admin "~2.0"
+
+-------------------------------
+in => common/config/main.php
+
+'modules' => [
+        'admin' => [
+            'class' => 'mdm\admin\Module',
+        ]
+    ],
+'components' => [
+        'authManager' => [
+//            'class' => 'yii\rbac\PhpManager',
+            'class' => 'yii\rbac\DbManager',
+        ],
+        'user' => [
+//            'class' => 'mdm\admin\models\User',
+            'identityClass' => 'mdm\admin\models\User',
+            'loginUrl' => ['admin/user/login'],
+        ]
+    ],
+
+-------------------------------
+
+
+You can use the following RBAC URLs to create and manage permissions/roles to the users:
+
+http://localhost/yii2-app/backend/web/index.php?r=admin
+http://localhost/yii2-app/backend/web/index.php?r=admin/route
+http://localhost/yii2-app/backend/web/index.php?r=admin/permission
+http://localhost/yii2-app/backend/web/index.php?r=admin/menu
+http://localhost/yii2-app/backend/web/index.php?r=admin/role
+http://localhost/yii2-app/backend/web/index.php?r=admin/assignment
+http://localhost/yii2-app/backend/web/index.php?r=admin/user

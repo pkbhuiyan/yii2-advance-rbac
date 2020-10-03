@@ -6,6 +6,7 @@ use Yii;
 use common\models\Menu;
 use backend\models\MenuSearch;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -35,13 +36,17 @@ class MenuController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new MenuSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        if(Yii::$app->user->can('view-menu')){
+            $searchModel = new MenuSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        }else{
+            throw new ForbiddenHttpException("You dont have any permission to access this page.");
+        }
     }
 
     /**
@@ -64,15 +69,20 @@ class MenuController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Menu();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if( Yii::$app->user->can('admin')){
+            $model = new Menu();
+
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }else{
+            throw new ForbiddenHttpException("You dont have any permission to access this page.");
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
     }
 
     /**

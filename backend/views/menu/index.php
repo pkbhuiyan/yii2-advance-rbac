@@ -13,11 +13,11 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="menu-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
+<?php if(Yii::$app->user->can('admin')) { ?>
     <p>
         <?= Html::a('Create Menu', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-
+<?php } ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
